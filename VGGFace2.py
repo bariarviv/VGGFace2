@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 # face verification with the VGGFace2 model
 import os
 import cv2
@@ -102,35 +96,30 @@ def search_name(name, filenames):
     
     return None
 
+def main():
+    threshold = 0.5
+    number_images = 4
+    folder = '.\data'
+    folderlen = len(folder) + 1
+    verify_name = 'sharon_stone'
+    
+    # define filenames
+    filenames = load_images_from_folder(folder)
+    # get embeddings file filenames
+    embeddings = get_embeddings(filenames, folderlen, number_images)
+    
+    # checks the image index of the person for whom the verification is performed
+    index = search_name(verify_name, filenames)
+    if index == None:
+        print('Error! The person for whom the verification was performed isnot included in the input images.')
+    else: 
+        # define sharon stone
+        sharon_id = embeddings[index]
+        print('\nFor Positive Tests print Match, for Negative Tests print NOT a Match')
 
-# In[2]:
+    # for loop without index 0 in embeddings
+    for i in range(len(filenames)):
+        is_match(filenames[i][folderlen:], sharon_id, embeddings[i], threshold)
 
-
-## Main
-threshold = 0.5
-number_images = 4
-folder = '.\data'
-folderlen = len(folder) + 1
-verify_name = 'sharon_stone'
-# define filenames
-filenames = load_images_from_folder(folder)
-# get embeddings file filenames
-embeddings = get_embeddings(filenames, folderlen, number_images)
-
-
-# In[3]:
-
-
-# checks the image index of the person for whom the verification is performed
-index = search_name(verify_name, filenames)
-if index == None:
-    print('Error! The person for whom the verification was performed isnot included in the input images.')
-else: 
-    # define sharon stone
-    sharon_id = embeddings[index]
-    print('\nFor Positive Tests print Match, for Negative Tests print NOT a Match')
-
-# for loop without index 0 in embeddings
-for i in range(len(filenames)):
-    is_match(filenames[i][folderlen:], sharon_id, embeddings[i], threshold)
-
+if __name__ == '__main__':
+    main()
